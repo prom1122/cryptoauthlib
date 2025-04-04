@@ -31,6 +31,6 @@
 #include "Arduino.h"
 #include "atca_status.h"
 
-#define MAX_I2C_BUSES   1
+#define MAX_I2C_BUSES   2
 
 #endif /* I2C_ARDUINO_H_ */
