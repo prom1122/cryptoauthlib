@@ -88,13 +88,17 @@
          if (Wire1.write(txdata, txlength) != (size_t)txlength) {
              result = ATCA_COMM_FAIL;
          }
-         Wire1.endTransmission();
+         if (Wire1.endTransmission() != 0) {
+             result = ATCA_COMM_FAIL;
+         }
      } else {
          Wire.beginTransmission(cfg->iface.atcai2c.slave_address >> 1);
          if (Wire.write(txdata, txlength) != (size_t)txlength) {
              result = ATCA_COMM_FAIL;
          }
-         Wire.endTransmission();
+         if (Wire.endTransmission() != 0) {
+             result = ATCA_COMM_FAIL;
+         }
      }
  
      return result;
@@ -232,38 +236,40 @@
  ATCA_STATUS hal_i2c_idle(ATCAIface iface)
  {
      ATCAIfaceCfg *cfg = atgetifacecfg(iface);
+     ATCA_STATUS result = ATCA_SUCCESS;
 
       
      if (cfg->iface.atcai2c.bus == 1) {
          Wire1.beginTransmission(cfg->iface.atcai2c.slave_address >> 1);
-         Wire1.write(0x02); // idle word address
-         Wire1.endTransmission();
+         if (Wire1.write(0x02) != 1) result = ATCA_COMM_FAIL;
+         if (Wire1.endTransmission() != 0) result = ATCA_COMM_FAIL;
      } else {
          Wire.beginTransmission(cfg->iface.atcai2c.slave_address >> 1);
-         Wire.write(0x02);
-         Wire.endTransmission();
+         if (Wire.write(0x02) != 1) result = ATCA_COMM_FAIL;
+         if (Wire.endTransmission() != 0) result = ATCA_COMM_FAIL;
      }
      atca_delay_ms(1);
-     return ATCA_SUCCESS;
+     return result;
  }
  
  
  ATCA_STATUS hal_i2c_sleep(ATCAIface iface)
  {
      ATCAIfaceCfg *cfg = atgetifacecfg(iface);
+     ATCA_STATUS result = ATCA_SUCCESS;
      
  
      if (cfg->iface.atcai2c.bus == 1) {
          Wire1.beginTransmission(cfg->iface.atcai2c.slave_address >> 1);
-         Wire1.write(0x01); // sleep word address
-         Wire1.endTransmission();
+         if (Wire1.write(0x01) != 1) result = ATCA_COMM_FAIL;
+         if (Wire1.endTransmission() != 0) result = ATCA_COMM_FAIL;
      } else {
          Wire.beginTransmission(cfg->iface.atcai2c.slave_address >> 1);
-         Wire.write(0x01);
-         Wire.endTransmission();
+         if (Wire.write(0x01) != 1) result = ATCA_COMM_FAIL;
+         if (Wire.endTransmission() != 0) result = ATCA_COMM_FAIL;
      }
      atca_delay_ms(1);
-     return ATCA_SUCCESS;
+     return result;
  }
  
  
